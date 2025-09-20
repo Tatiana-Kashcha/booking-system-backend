@@ -33,5 +33,5 @@ export class Appointment {
   duration: number;
 
   @Column({ default: 'pending' })
-  status: string; // pending | confirmed | cancelled
+  status: string; // pending | confirmed | cancelled | completed | modified
 }
