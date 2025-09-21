@@ -1,25 +1,54 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserResponseDto, UserData } from './dto/user-response.dto';
+import { Role } from './entities/user.entity';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Post()
-  create(@Body() createUserDto: CreateUserDto) {
+  @Post('register')
+  create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
     return this.usersService.create(createUserDto);
   }
 
   @Get()
-  findAll() {
+  findAll(): Promise<UserData[]> {
     return this.usersService.findAll();
   }
 
+  @Get('role/:role')
+  findAllRole(@Param('role') role: Role): Promise<UserData[]> {
+    return this.usersService.findAllUserRole(role);
+  }
+
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  async findOne(@Param('id') id: string): Promise<UserData | null> {
+    const parsedId = Number(id);
+
+    if (isNaN(parsedId)) {
+      throw new BadRequestException('ID must be a valid number');
+    }
+
+    const user = await this.usersService.findOneUserId(parsedId);
+
+    if (!user) {
+      throw new NotFoundException(`User with ID ${parsedId} not found`);
+    }
+
+    return user;
   }
 
   @Patch(':id')

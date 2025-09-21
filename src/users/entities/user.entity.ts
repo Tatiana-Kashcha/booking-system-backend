@@ -39,7 +39,10 @@ export class User {
   @Column({ nullable: true })
   description?: string;
 
-  @Column({ default: () => 'CURRENT_TIMESTAMP' })
+  @Column({
+    type: 'date',
+    default: () => 'CURRENT_DATE',
+  })
   createdAt: Date;
 
   @OneToMany(() => Appointment, (appointment) => appointment.client)

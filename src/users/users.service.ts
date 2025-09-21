@@ -7,7 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserResponseDto } from './dto/user-response.dto';
+import { UserResponseDto, UserData } from './dto/user-response.dto';
+import { Role } from './entities/user.entity';
 
 @Injectable()
 export class UsersService {
@@ -64,12 +65,24 @@ export class UsersService {
     }
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll(): Promise<UserData[]> {
+    return this.usersRepository.find({
+      select: ['id', 'name', 'email', 'role', 'profession', 'description'],
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findAllUserRole(role: Role): Promise<UserData[]> {
+    return this.usersRepository.find({
+      where: { role },
+      select: ['id', 'name', 'email', 'role', 'profession', 'description'],
+    });
+  }
+
+  async findOneUserId(id: number): Promise<UserData | null> {
+    return this.usersRepository.findOne({
+      where: { id },
+      select: ['id', 'name', 'email', 'role', 'profession', 'description'],
+    });
   }
 
   update(id: number, updateUserDto: UpdateUserDto) {

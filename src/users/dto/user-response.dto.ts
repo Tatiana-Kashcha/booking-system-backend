@@ -1,6 +1,6 @@
 import { Role } from '../entities/user.entity';
 
-class UserData {
+export class UserData {
   id: number;
   name: string;
   email: string;
