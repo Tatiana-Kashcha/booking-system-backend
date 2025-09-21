@@ -12,14 +12,18 @@ export class Appointment {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => User, (user) => user.clientAppointments)
+  @ManyToOne(() => User, (user) => user.clientAppointments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'client_id',
     foreignKeyConstraintName: 'FK_clientId',
   })
   client: User;
 
-  @ManyToOne(() => User, (user) => user.businessAppointments)
+  @ManyToOne(() => User, (user) => user.businessAppointments, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({
     name: 'business_id',
     foreignKeyConstraintName: 'FK_businessId',

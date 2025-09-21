@@ -85,11 +85,34 @@ export class UsersService {
     });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(
+    id: number,
+    updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto | null> {
+    await this.usersRepository.update(id, updateUserDto);
+    const options: FindOneOptions<User> = { where: { id } };
+
+    const user = await this.usersRepository.findOne(options);
+
+    if (!user) {
+      return null;
+    }
+    const {
+      id: userId,
+      name,
+      email,
+      role,
+      profession,
+      description,
+      token,
+    } = user;
+    return {
+      user: { id: userId, name, email, role, profession, description },
+      token,
+    };
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number): Promise<void> {
+    await this.usersRepository.delete(id);
   }
 }

@@ -17,7 +17,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: [User, Appointment],
-      synchronize: false, // synchronize: true - для створення таблиць при першому старті
+      synchronize: false, // synchronize: true - для створення таблиць
     }),
     UsersModule,
     AppointmentsModule,

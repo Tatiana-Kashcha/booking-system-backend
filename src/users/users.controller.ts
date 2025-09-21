@@ -52,12 +52,27 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+  async update(
+    @Param('id') id: string,
+    @Body() updateUserDto: UpdateUserDto,
+  ): Promise<UserResponseDto | null> {
+    const parsedId = Number(id);
+
+    if (isNaN(parsedId)) {
+      throw new BadRequestException('ID must be a valid number');
+    }
+
+    const userUpdated = await this.usersService.update(parsedId, updateUserDto);
+
+    if (!userUpdated) {
+      throw new NotFoundException(`User with ID ${parsedId} not found`);
+    }
+
+    return userUpdated;
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id') id: string): Promise<void> {
     return this.usersService.remove(+id);
   }
 }
