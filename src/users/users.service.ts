@@ -2,7 +2,6 @@ import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOneOptions } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
 
 import { User } from './entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,10 +14,9 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
-    private jwtService: JwtService,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserResponseDto> {
+  async create(createUserDto: CreateUserDto): Promise<UserData> {
     const existingUser = await this.usersRepository.findOne({
       where: { email: createUserDto.email },
     });
@@ -33,36 +31,7 @@ export class UsersService {
       password: hashedPassword,
     });
 
-    try {
-      const savedUser = await this.usersRepository.save(newUser);
-
-      const payload = {
-        sub: savedUser.id,
-        username: savedUser.name,
-        email: savedUser.email,
-      };
-      const accessToken = this.jwtService.sign(payload);
-
-      await this.usersRepository.update(savedUser.id, {
-        token: accessToken,
-      });
-
-      const user = {
-        id: savedUser.id,
-        name: savedUser.name,
-        email: savedUser.email,
-        role: savedUser.role,
-        profession: savedUser.profession,
-        description: savedUser.description,
-      };
-
-      return {
-        user,
-        token: accessToken,
-      };
-    } catch (error) {
-      throw error;
-    }
+    return this.usersRepository.save(newUser);
   }
 
   async findAll(): Promise<UserData[]> {
@@ -114,5 +83,23 @@ export class UsersService {
 
   async remove(id: number): Promise<void> {
     await this.usersRepository.delete(id);
+  }
+
+  async findByEmail(email: string): Promise<User | null> {
+    const options: FindOneOptions<User> = { where: { email } };
+    const user = await this.usersRepository.findOne(options);
+    return user;
+  }
+
+  async isTokenValid(payload: any): Promise<boolean> {
+    const userExists = await this.usersRepository.findOne({
+      where: { id: payload.sub },
+    });
+
+    return userExists?.token ? true : false;
+  }
+
+  async updateToken(userId: number, currentToken: string): Promise<void> {
+    await this.usersRepository.update(userId, { token: currentToken });
   }
 }

@@ -1,7 +1,6 @@
 import {
   Controller,
   Get,
-  Post,
   Body,
   Patch,
   Param,
@@ -9,8 +8,8 @@ import {
   BadRequestException,
   NotFoundException,
 } from '@nestjs/common';
+
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto, UserData } from './dto/user-response.dto';
 import { Role } from './entities/user.entity';
@@ -18,11 +17,6 @@ import { Role } from './entities/user.entity';
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
-
-  @Post('register')
-  create(@Body() createUserDto: CreateUserDto): Promise<UserResponseDto> {
-    return this.usersService.create(createUserDto);
-  }
 
   @Get()
   findAll(): Promise<UserData[]> {
