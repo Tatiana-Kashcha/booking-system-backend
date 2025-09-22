@@ -15,11 +15,11 @@ export class Appointment {
   @ManyToOne(() => User, (user) => user.clientAppointments, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({
-    name: 'client_id',
-    foreignKeyConstraintName: 'FK_clientId',
-  })
+  @JoinColumn({ name: 'client_id', foreignKeyConstraintName: 'FK_clientId' })
   client: User;
+
+  @Column({ name: 'client_id' })
+  clientId: number;
 
   @ManyToOne(() => User, (user) => user.businessAppointments, {
     onDelete: 'CASCADE',
@@ -30,12 +30,16 @@ export class Appointment {
   })
   business: User;
 
+  @Column({ name: 'business_id' })
+  businessId: number;
   @Column()
-  date: Date;
+  appointment_date: Date;
 
   @Column()
   duration: number;
 
   @Column({ default: 'pending' })
-  status: string; // pending | confirmed | cancelled | completed | modified
+  status: string;
 }
+
+// pending | confirmed | cancelled | completed | modified
