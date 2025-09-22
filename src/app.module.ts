@@ -11,6 +11,9 @@ import { UsersModule } from './users/users.module';
 import { AppointmentsModule } from './appointments/appointments.module';
 import { AuthModule } from './auth/auth.module';
 
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -19,6 +22,9 @@ import { AuthModule } from './auth/auth.module';
       url: process.env.DATABASE_URL,
       entities: [User, Appointment],
       synchronize: false, // synchronize: true - для створення таблиць
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
     }),
     UsersModule,
     AppointmentsModule,
