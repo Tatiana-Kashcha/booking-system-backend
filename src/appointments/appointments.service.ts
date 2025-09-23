@@ -4,7 +4,11 @@ import { Repository, FindOneOptions } from 'typeorm';
 
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { AppointmentResponseDto } from './dto/appointment-response.dto';
+import {
+  AppointmentResponseDto,
+  AppointmentClientDto,
+  AppointmentBusinessDto,
+} from './dto/appointment-response.dto';
 import { Appointment } from './entities/appointment.entity';
 
 @Injectable()
@@ -33,33 +37,44 @@ export class AppointmentsService {
 
   async findAllUserClientAppointment(
     userId: number,
-  ): Promise<AppointmentResponseDto[]> {
+  ): Promise<AppointmentClientDto[]> {
     return this.appointmentRepository.find({
       where: { clientId: userId },
-      select: [
-        'id',
-        'appointment_date',
-        'duration',
-        'status',
-        'clientId',
-        'businessId',
-      ],
+      relations: { business: true },
+      select: {
+        id: true,
+        appointment_date: true,
+        duration: true,
+        status: true,
+        clientId: true,
+        business: {
+          id: true,
+          name: true,
+          email: true,
+          profession: true,
+        },
+      },
     });
   }
 
   async findAllUserBusinessAppointment(
     userId: number,
-  ): Promise<AppointmentResponseDto[]> {
+  ): Promise<AppointmentBusinessDto[]> {
     return this.appointmentRepository.find({
       where: { businessId: userId },
-      select: [
-        'id',
-        'appointment_date',
-        'duration',
-        'status',
-        'clientId',
-        'businessId',
-      ],
+      relations: { client: true },
+      select: {
+        id: true,
+        appointment_date: true,
+        duration: true,
+        status: true,
+        businessId: true,
+        client: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     });
   }
 

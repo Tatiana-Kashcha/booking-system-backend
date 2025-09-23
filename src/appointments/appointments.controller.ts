@@ -14,7 +14,11 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 import { CreateAppointmentDto } from './dto/create-appointment.dto';
 import { UpdateAppointmentDto } from './dto/update-appointment.dto';
-import { AppointmentResponseDto } from './dto/appointment-response.dto';
+import {
+  AppointmentResponseDto,
+  AppointmentClientDto,
+  AppointmentBusinessDto,
+} from './dto/appointment-response.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('appointments')
@@ -34,14 +38,14 @@ export class AppointmentsController {
   @Get('client/:userId')
   findAllClientAppointment(
     @Param('userId') userId: number,
-  ): Promise<AppointmentResponseDto[]> {
+  ): Promise<AppointmentClientDto[]> {
     return this.appointmentsService.findAllUserClientAppointment(userId);
   }
 
   @Get('business/:userId')
   findAllBusinessAppointment(
     @Param('userId') userId: number,
-  ): Promise<AppointmentResponseDto[]> {
+  ): Promise<AppointmentBusinessDto[]> {
     return this.appointmentsService.findAllUserBusinessAppointment(userId);
   }
 
