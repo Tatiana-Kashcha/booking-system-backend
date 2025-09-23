@@ -26,7 +26,9 @@ export class AppointmentsController {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
   @Post()
-  create(@Body() createAppointmentDto: CreateAppointmentDto) {
+  create(
+    @Body() createAppointmentDto: CreateAppointmentDto,
+  ): Promise<AppointmentClientDto> {
     return this.appointmentsService.create(createAppointmentDto);
   }
 

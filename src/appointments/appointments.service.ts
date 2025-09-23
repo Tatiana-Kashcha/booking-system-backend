@@ -18,8 +18,32 @@ export class AppointmentsService {
     private appointmentRepository: Repository<Appointment>,
   ) {}
 
-  create(createAppointmentDto: CreateAppointmentDto) {
-    return 'This action adds a new appointment';
+  async create(
+    createAppointmentDto: CreateAppointmentDto,
+  ): Promise<AppointmentClientDto> {
+    const newAppointment = this.appointmentRepository.create({
+      ...createAppointmentDto,
+    });
+    const savedAppointment =
+      await this.appointmentRepository.save(newAppointment);
+
+    return this.appointmentRepository.findOne({
+      where: { id: savedAppointment.id },
+      select: {
+        id: true,
+        appointment_date: true,
+        duration: true,
+        status: true,
+        clientId: true,
+        business: {
+          id: true,
+          name: true,
+          email: true,
+          profession: true,
+        },
+      },
+      relations: ['business'],
+    }) as Promise<AppointmentClientDto>;
   }
 
   async findAll(): Promise<AppointmentResponseDto[]> {
@@ -54,6 +78,9 @@ export class AppointmentsService {
           profession: true,
         },
       },
+      order: {
+        id: 'DESC',
+      },
     });
   }
 
@@ -74,6 +101,9 @@ export class AppointmentsService {
           name: true,
           email: true,
         },
+      },
+      order: {
+        id: 'DESC',
       },
     });
   }
