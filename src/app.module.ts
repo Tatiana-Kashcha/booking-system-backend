@@ -23,12 +23,12 @@ import { join } from 'path';
       entities: [User, Appointment],
       synchronize: false, // synchronize: true - для створення таблиць
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', 'public'),
-    }),
     UsersModule,
     AppointmentsModule,
     AuthModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'public'),
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],

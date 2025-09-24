@@ -6,7 +6,6 @@ import {
   Patch,
   Param,
   Delete,
-  Request,
   UseGuards,
 } from '@nestjs/common';
 import { AppointmentsService } from './appointments.service';

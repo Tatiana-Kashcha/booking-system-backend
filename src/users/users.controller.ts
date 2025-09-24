@@ -7,13 +7,16 @@ import {
   Delete,
   BadRequestException,
   NotFoundException,
+  UseGuards,
 } from '@nestjs/common';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 import { UsersService } from './users.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserResponseDto, UserData } from './dto/user-response.dto';
 import { Role } from './entities/user.entity';
 
+@UseGuards(JwtAuthGuard)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
