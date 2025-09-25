@@ -37,6 +37,9 @@ export class UsersService {
   async findAll(): Promise<UserData[]> {
     return this.usersRepository.find({
       select: ['id', 'name', 'email', 'role', 'profession', 'description'],
+      order: {
+        id: 'ASC',
+      },
     });
   }
 
@@ -44,6 +47,9 @@ export class UsersService {
     return this.usersRepository.find({
       where: { role },
       select: ['id', 'name', 'email', 'role', 'profession', 'description'],
+      order: {
+        id: 'ASC',
+      },
     });
   }
 
