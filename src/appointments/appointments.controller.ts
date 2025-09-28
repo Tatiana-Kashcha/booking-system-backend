@@ -1,5 +1,6 @@
 import {
   Controller,
+  Request,
   Get,
   Post,
   Body,
@@ -36,18 +37,18 @@ export class AppointmentsController {
     return this.appointmentsService.findAll();
   }
 
-  @Get('client/:userId')
-  findAllClientAppointment(
-    @Param('userId') userId: number,
+  @Get('client')
+  async findAllClientAppointment(
+    @Request() req,
   ): Promise<AppointmentClientDto[]> {
-    return this.appointmentsService.findAllUserClientAppointment(userId);
+    return this.appointmentsService.findAllUserClientAppointment(req.user.id);
   }
 
-  @Get('business/:userId')
-  findAllBusinessAppointment(
-    @Param('userId') userId: number,
+  @Get('business')
+  async findAllBusinessAppointment(
+    @Request() req,
   ): Promise<AppointmentBusinessDto[]> {
-    return this.appointmentsService.findAllUserBusinessAppointment(userId);
+    return this.appointmentsService.findAllUserBusinessAppointment(req.user.id);
   }
 
   @Get(':id')
