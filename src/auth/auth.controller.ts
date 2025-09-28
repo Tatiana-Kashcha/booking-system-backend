@@ -11,7 +11,7 @@ import { JwtAuthGuard } from './jwt-auth.guard';
 import { AuthService } from './auth.service';
 
 import { CreateUserDto } from '../users/dto/create-user.dto';
-import { UserResponseDto } from '../users/dto/user-response.dto';
+import { UserResponseDto, UserData } from '../users/dto/user-response.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -32,8 +32,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard)
   @Get('current')
-  getCurrent(@Request() req) {
-    return req.user;
+  async getCurrent(@Request() req): Promise<UserData | null> {
+    return this.authService.getCurrentUser(req.user.id);
   }
 
   @UseGuards(JwtAuthGuard)

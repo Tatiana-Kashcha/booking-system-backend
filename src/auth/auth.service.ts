@@ -82,4 +82,13 @@ export class AuthService {
   async logout(userId: number) {
     await this.usersService.updateToken(userId, '');
   }
+
+  async getCurrentUser(userId: number): Promise<UserData | null> {
+    try {
+      const currentUser = await this.usersService.findOneUserId(userId);
+      return currentUser;
+    } catch (error) {
+      throw error;
+    }
+  }
 }
