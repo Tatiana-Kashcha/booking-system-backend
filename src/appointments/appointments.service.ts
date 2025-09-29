@@ -108,6 +108,24 @@ export class AppointmentsService {
     });
   }
 
+  async updateAppointmentStatus(
+    id: number,
+    status: string,
+  ): Promise<AppointmentResponseDto | null> {
+    await this.appointmentRepository.update(id, { status });
+    return this.appointmentRepository.findOne({
+      where: { id },
+      select: [
+        'id',
+        'appointment_date',
+        'duration',
+        'status',
+        'clientId',
+        'businessId',
+      ],
+    });
+  }
+
   findOne(id: number) {
     return `This action returns a #${id} appointment`;
   }

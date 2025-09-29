@@ -56,6 +56,11 @@ export class AppointmentsController {
     return this.appointmentsService.findOne(+id);
   }
 
+  @Patch('status/:id')
+  updateStatus(@Param('id') id: string, @Body() body: { status: string }) {
+    return this.appointmentsService.updateAppointmentStatus(+id, body.status);
+  }
+
   @Patch(':id')
   update(
     @Param('id') id: string,
