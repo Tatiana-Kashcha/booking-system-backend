@@ -116,7 +116,7 @@ export class AppointmentsService {
     return `This action updates a #${id} appointment`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} appointment`;
+  async remove(id: number): Promise<void> {
+    await this.appointmentRepository.delete(id);
   }
 }
